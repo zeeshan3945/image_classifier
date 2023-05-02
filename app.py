@@ -4,11 +4,13 @@ from PIL import Image
 import base64
 from io import BytesIO
 
-
-# Load your model to GPU as a global variable here using the variable name "model"
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
-model = models.vgg16(pretrained=True).to(device)
-model.eval()
+
+def init():
+    global model
+    model = models.vgg16(pretrained=True).to(device)
+    model.eval()
+
 
 def inference(model_inputs:dict) -> dict:
     # Parse out your arguments
