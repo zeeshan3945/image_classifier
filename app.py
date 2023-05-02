@@ -52,6 +52,7 @@ def inference(model_inputs:dict) -> dict:
     _, predicted = torch.max(output.data, 1)
 
     # Return the predicted array as the response
+    predicted = predicted.to("cpu")
     return {
                 "Predicted Class": predicted.item(),
             }
