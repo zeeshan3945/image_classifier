@@ -2,6 +2,8 @@ import torch
 from torchvision import transforms, models
 from PIL import Image
 import base64
+from io import BytesIO
+
 
 # Load your model to GPU as a global variable here using the variable name "model"
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
