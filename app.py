@@ -11,6 +11,16 @@ def init():
     model = models.vgg16(pretrained=True).to(device)
     model.eval()
 
+    global tr
+    tr = transforms.Compose([
+    transforms.Resize(256),
+    transforms.CenterCrop(224),
+    transforms.ToTensor(),
+    transforms.Normalize(
+        mean=[0.485, 0.456, 0.406],
+        std=[0.229, 0.224, 0.225])
+    ])
+
 
 def inference(model_inputs:dict) -> dict:
     # Parse out your arguments
@@ -18,16 +28,7 @@ def inference(model_inputs:dict) -> dict:
     if prompt is None:
         return {'message': "No prompt provided"}
 
-    tr = transforms.Compose([
-        transforms.Resize(256),
-        transforms.CenterCrop(224),
-        transforms.ToTensor(),
-        transforms.Normalize(
-            mean=[0.485, 0.456, 0.406],
-            std=[0.229, 0.224, 0.225])
-    ])
-
-    image_binary = base64.b64decode(prompt)
+    image_binary = base64.decodebytes(prompt.encode('utf-8'))
     PIL_image = Image.open(BytesIO(image_binary))
     img_tensor = tr(PIL_image.convert("RGB")).unsqueeze(0).to(device)
 
@@ -37,6 +38,6 @@ def inference(model_inputs:dict) -> dict:
     # Get the predicted class index
     _, predicted = torch.max(output.data, 1)
 
-    return {
+    return {"Available Device": device,
         "Predicted Class": predicted.item(),
     }

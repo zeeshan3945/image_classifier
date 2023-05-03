@@ -4,7 +4,7 @@
 import requests
 import base64
 
-path = '/Users/zeeshan/Documents/Qdrant-App/coin_images/1695.jpg'
+path = '/Users/zeeshan/Desktop/Python_MLOPS/Image_Classification/imagenet-sample-images/n01440764_tench.JPEG'
 image_file = open(path, 'rb')
 image_data = base64.b64encode(image_file.read()).decode('utf-8')
 
