@@ -4,15 +4,10 @@ from PIL import Image
 import base64
 from io import BytesIO
 
+
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
-def init():
-    global model
-    model = models.vgg16(pretrained=True).to(device)
-    model.eval()
-
-    global tr
-    tr = transforms.Compose([
+tr = transforms.Compose([
     transforms.Resize(256),
     transforms.CenterCrop(224),
     transforms.ToTensor(),
@@ -22,8 +17,15 @@ def init():
     ])
 
 
+def init():
+    global model
+
+    model = models.vgg16(pretrained=True).to(device)
+    model.eval()
+
 def inference(model_inputs:dict) -> dict:
-    # Parse out your arguments
+    global model
+
     prompt = model_inputs.get('prompt', None)
     if prompt is None:
         return {'message': "No prompt provided"}
